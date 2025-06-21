@@ -106,12 +106,12 @@
           }
 
           files.forEach(file => {
-            const img = document.createElement('img');
+            const img = new Image();
             img.src = `https://drive.google.com/thumbnail?id=${file.id}&sz=w800`;
             img.alt = file.name;
             img.className = "thumb";
             img.addEventListener('click', () => showFullscreen(img.src, file.name));
-            gallery.appendChild(img);
+            img.onload = () => gallery.appendChild(img); // Only append when fully loaded
           });
         } catch (err) {
           document.getElementById('gallery').innerText = 'Error loading images.';
