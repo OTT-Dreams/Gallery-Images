@@ -1,593 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Our Memories ♡</title>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    :root {
-      --bg:         #0d0608;
-      --bg2:        #110a0d;
-      --surface:    #1a0e12;
-      --surface2:   #22121a;
-      --border:     #3a1a26;
-      --border2:    #4d2535;
-      --crimson:    #8b1a2e;
-      --rose:       #c24b6e;
-      --rose-light: #e8789a;
-      --blush:      #f0aec3;
-      --gold:       #c9935a;
-      --gold-light: #e8b87a;
-      --text:       #f0dde5;
-      --text2:      #c9a8b8;
-      --muted:      #7a4a5e;
-      --white:      #fff0f5;
+    :root{
+      --bg:#0d0608; --surface:#1a0e12; --surface2:#22121a;
+      --border:#3a1a26; --border2:#4d2535;
+      --crimson:#8b1a2e; --rose:#c24b6e; --rose-light:#e8789a;
+      --blush:#f0aec3; --gold:#c9935a; --gold-light:#e8b87a;
+      --text:#f0dde5; --text2:#c9a8b8; --muted:#7a4a5e;
     }
 
-    html { scroll-behavior: smooth; }
+    html{scroll-behavior:smooth}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      min-height: 100vh;
-      overflow-x: hidden;
+    body{
+      background:var(--bg); color:var(--text);
+      font-family:'Raleway',sans-serif; font-weight:300;
+      min-height:100vh; overflow-x:hidden;
     }
 
-    /* ── Static background — NO repaints on scroll ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
+    /* ── BG gradient — fixed, own GPU layer ── */
+    body::before{
+      content:''; position:fixed; inset:0;
       background:
-        radial-gradient(ellipse 70% 55% at 15% 10%, rgba(139,26,46,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 55% 45% at 85% 85%, rgba(194,75,110,0.12) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 35% at 50% 50%, rgba(201,147,90,0.06) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
-      /* GPU layer — never repaints */
-      will-change: transform;
-      transform: translateZ(0);
+        radial-gradient(ellipse 70% 55% at 15% 10%,rgba(139,26,46,.18) 0%,transparent 60%),
+        radial-gradient(ellipse 55% 45% at 85% 85%,rgba(194,75,110,.12) 0%,transparent 55%),
+        radial-gradient(ellipse 40% 35% at 50% 50%,rgba(201,147,90,.06) 0%,transparent 60%);
+      pointer-events:none; z-index:0;
+      will-change:transform; transform:translateZ(0);
     }
 
-    /* ── Stars — isolated GPU layer ── */
-    .stars {
-      position: fixed; inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-      /* own composite layer so scroll never triggers repaint */
-      will-change: transform;
-      transform: translateZ(0);
-      contain: strict;
+    /* ── Stars ── */
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;will-change:transform;transform:translateZ(0);contain:strict}
+    .star{position:absolute;border-radius:50%;background:var(--blush);animation:twinkle ease-in-out infinite;will-change:opacity,transform}
+    @keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.7;transform:scale(1.6)}}
+
+    /* ── Sparks ── */
+    .sparks{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1;will-change:transform;transform:translateZ(0);contain:strict}
+    .spark{position:absolute;bottom:-40px;opacity:0;animation:riseUp linear infinite;user-select:none;will-change:opacity,transform}
+    @keyframes riseUp{0%{opacity:0;transform:translateY(0) rotate(0deg) translateX(0)}12%{opacity:.6}88%{opacity:.35}100%{opacity:0;transform:translateY(-110vh) rotate(540deg) translateX(50px)}}
+
+    /* ═══════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════ */
+    header{
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2.5rem;
+      background:rgba(13,6,8,.9); backdrop-filter:blur(24px);
+      border-bottom:1px solid var(--border);
+      box-shadow:0 1px 0 rgba(201,147,90,.08),0 4px 30px rgba(0,0,0,.5);
+      will-change:transform; transform:translateZ(0);
     }
 
-    .star {
-      position: absolute;
-      border-radius: 50%;
-      background: var(--blush);
-      animation: twinkle ease-in-out infinite;
-      /* each star on its own layer */
-      will-change: opacity, transform;
+    .logo{display:flex;flex-direction:column;line-height:1}
+    .logo-main{
+      font-family:'Great Vibes',cursive; font-size:2.1rem;
+      background:linear-gradient(135deg,var(--rose-light),var(--gold-light),var(--blush));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      letter-spacing:.04em; filter:drop-shadow(0 0 12px rgba(232,120,154,.4));
+    }
+    .logo-sub{font-size:.5rem;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-top:.2rem;padding-left:2px}
+
+    .header-right{display:flex;align-items:center;gap:1rem}
+
+    /* search */
+    .search-wrap{position:relative;display:flex;align-items:center}
+    .search-input{
+      background:rgba(26,14,18,.85); border:1px solid var(--border); border-radius:20px;
+      color:var(--text); font-family:'Raleway',sans-serif; font-size:.62rem;
+      letter-spacing:.08em; padding:.3rem 2rem .3rem .85rem; outline:none; width:160px;
+      transition:border-color .3s,width .3s,box-shadow .3s;
+    }
+    .search-input::placeholder{color:var(--muted)}
+    .search-input:focus{border-color:var(--rose);width:200px;box-shadow:0 0 12px rgba(139,26,46,.35)}
+    .search-icon{position:absolute;right:.65rem;color:var(--muted);font-size:.72rem;pointer-events:none}
+
+    .photo-count{display:flex;align-items:center;gap:.5rem;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+    .heart-pulse{color:var(--rose);font-size:.85rem;animation:heartPulse 1.8s ease infinite;filter:drop-shadow(0 0 6px rgba(194,75,110,.6));will-change:transform}
+    @keyframes heartPulse{0%,100%{transform:scale(1)}35%{transform:scale(1.35)}65%{transform:scale(.92)}}
+
+    .view-toggle{display:flex;gap:.3rem}
+    .view-btn{
+      background:none; border:1px solid var(--border); color:var(--muted);
+      cursor:pointer; padding:.28rem .65rem; border-radius:20px;
+      font-size:.6rem; font-family:'Raleway',sans-serif; letter-spacing:.1em; transition:all .28s;
+    }
+    .view-btn.active,.view-btn:hover{background:var(--crimson);border-color:var(--rose);color:var(--blush);box-shadow:0 0 14px rgba(139,26,46,.5)}
+
+    /* ═══════════════════════════════════════
+       NAV TABS
+    ═══════════════════════════════════════ */
+    .nav-tabs{
+      position:sticky; top:63px; z-index:150;
+      display:flex; align-items:center;
+      background:rgba(13,6,8,.95); backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      padding:0 2.5rem;
+      will-change:transform; transform:translateZ(0);
     }
 
-    @keyframes twinkle {
-      0%,100% { opacity: 0.1; transform: scale(1); }
-      50%      { opacity: 0.7; transform: scale(1.6); }
+    .nav-tab{
+      background:none; border:none; color:var(--muted);
+      cursor:pointer; padding:.8rem 1.3rem;
+      font-size:.6rem; font-family:'Raleway',sans-serif;
+      letter-spacing:.18em; text-transform:uppercase;
+      position:relative; transition:color .3s;
+      display:flex; align-items:center; gap:.4rem; white-space:nowrap;
+    }
+    .nav-tab::after{
+      content:''; position:absolute; bottom:0; left:0; right:0;
+      height:2px; background:linear-gradient(90deg,var(--rose),var(--gold));
+      transform:scaleX(0); transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .nav-tab.active{color:var(--blush)}
+    .nav-tab.active::after{transform:scaleX(1)}
+    .nav-tab:hover{color:var(--text2)}
+
+    .tab-badge{
+      background:var(--crimson); color:var(--blush);
+      font-size:.46rem; padding:.08rem .32rem; border-radius:10px;
+      min-width:16px; text-align:center; letter-spacing:.04em;
+      transition:background .3s;
+    }
+    .nav-tab.active .tab-badge{background:var(--rose)}
+
+    /* ═══════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════ */
+    .hero{
+      text-align:center; padding:9.5rem 2rem 2.8rem;
+      position:relative; z-index:2;
+    }
+    .hero-eyebrow{font-size:.55rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;filter:drop-shadow(0 0 8px rgba(201,147,90,.4))}
+    .hero-title{
+      font-family:'Great Vibes',cursive;
+      font-size:clamp(3rem,8.5vw,6rem);
+      background:linear-gradient(160deg,var(--blush) 0%,var(--rose-light) 40%,var(--gold-light) 80%,var(--blush) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      line-height:1.15; margin-bottom:.8rem;
+      animation:titleGlow 4s ease infinite alternate; will-change:filter;
+    }
+    @keyframes titleGlow{from{filter:drop-shadow(0 0 20px rgba(232,120,154,.25))}to{filter:drop-shadow(0 0 40px rgba(232,120,154,.5))}}
+    .hero-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--text2);letter-spacing:.05em}
+    .hero-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:1.5rem auto 0;max-width:320px}
+    .divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border2))}
+    .divider-line.r{background:linear-gradient(90deg,var(--border2),transparent)}
+    .divider-icon{color:var(--gold);font-size:.85rem;filter:drop-shadow(0 0 6px rgba(201,147,90,.5))}
+
+    /* ═══════════════════════════════════════
+       MAIN & SECTIONS
+    ═══════════════════════════════════════ */
+    main{padding:1.5rem 2rem 5rem;max-width:1600px;margin:0 auto;position:relative;z-index:2}
+
+    .section{display:none}
+    .section.active{display:block}
+
+    /* section header row */
+    .section-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.4rem}
+    .section-head-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--text2);letter-spacing:.08em;white-space:nowrap}
+    .section-head-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
+    .section-head-count{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+
+    /* ═══════════════════════════════════════
+       FAVORITES BANNER
+    ═══════════════════════════════════════ */
+    .fav-banner{
+      display:flex; align-items:center; gap:1.1rem;
+      padding:1rem 1.4rem; margin-bottom:1.8rem;
+      background:linear-gradient(135deg,rgba(139,26,46,.22),rgba(26,14,18,.8));
+      border:1px solid var(--border2); border-radius:14px;
+      border-left:3px solid var(--rose);
+    }
+    .fav-banner-icon{font-size:1.6rem;filter:drop-shadow(0 0 8px rgba(194,75,110,.5));flex-shrink:0}
+    .fav-banner-text h3{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--blush);margin-bottom:.2rem}
+    .fav-banner-text p{font-size:.6rem;letter-spacing:.1em;color:var(--muted);line-height:1.6}
+
+    /* clear favs button */
+    .fav-clear-btn{
+      margin-left:auto; flex-shrink:0;
+      background:rgba(139,26,46,.25); border:1px solid var(--border2);
+      color:var(--muted); cursor:pointer; border-radius:20px;
+      padding:.28rem .75rem; font-size:.56rem;
+      font-family:'Raleway',sans-serif; letter-spacing:.1em; text-transform:uppercase;
+      transition:all .28s;
+    }
+    .fav-clear-btn:hover{background:rgba(139,26,46,.5);border-color:var(--rose);color:var(--blush)}
+
+    /* empty favorites state */
+    .fav-empty{
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      min-height:38vh; gap:1.1rem; text-align:center;
+    }
+    .fav-empty .empty-icon{font-size:4rem;opacity:.25;animation:heartPulse 2.2s ease infinite}
+    .fav-empty h3{font-family:'Great Vibes',cursive;font-size:2.5rem;color:var(--muted)}
+    .fav-empty p{font-size:.68rem;letter-spacing:.1em;color:var(--muted);max-width:300px;line-height:1.8}
+    .fav-empty .hint{
+      display:inline-flex; align-items:center; gap:.4rem;
+      font-size:.56rem; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--rose); margin-top:.3rem;
+      filter:drop-shadow(0 0 6px rgba(194,75,110,.3));
     }
 
-    /* ── Rising sparks — isolated ── */
-    .sparks {
-      position: fixed; inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 1;
-      will-change: transform;
-      transform: translateZ(0);
-      contain: strict;
+    /* ═══════════════════════════════════════
+       GALLERY GRID
+    ═══════════════════════════════════════ */
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+      gap:14px; opacity:0;
+      animation:fadeUp .9s ease forwards;
+    }
+    .gallery.list-view{grid-template-columns:1fr;gap:10px}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── PHOTO CARD ── */
+    .photo-card{
+      position:relative; aspect-ratio:1; overflow:hidden;
+      cursor:pointer; background:var(--surface);
+      border-radius:16px; border:1px solid var(--border);
+      box-shadow:0 4px 20px rgba(0,0,0,.55);
+      animation:cardReveal .6s cubic-bezier(.34,1.46,.64,1) both;
+      contain:layout style paint;
+      will-change:transform; transform:translateZ(0);
+    }
+    @keyframes cardReveal{from{opacity:0;transform:scale(.87) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .photo-card:hover{transform:translateY(-6px) scale(1.018) translateZ(0)}
+    .gallery.list-view .photo-card{aspect-ratio:16/5;border-radius:12px}
+
+    .photo-card img{
+      width:100%; height:100%; object-fit:cover; display:block; border-radius:16px;
+      transition:transform .6s cubic-bezier(.25,.46,.45,.94),filter .4s ease;
+      filter:brightness(.8) saturate(.88) sepia(.1);
+      will-change:transform,filter;
+    }
+    .photo-card:hover img{transform:scale(1.07);filter:brightness(.96) saturate(1.1) sepia(.03)}
+
+    .photo-overlay{
+      position:absolute; inset:0; border-radius:16px;
+      background:linear-gradient(to top,rgba(8,2,5,.88) 0%,rgba(80,15,35,.4) 40%,transparent 72%);
+      opacity:0; transition:opacity .35s ease;
+      display:flex; flex-direction:column;
+      align-items:flex-start; justify-content:flex-end;
+      padding:1rem 1.1rem; gap:.18rem;
+      will-change:opacity;
+    }
+    .photo-card:hover .photo-overlay{opacity:1}
+
+    .photo-name{
+      font-family:'Cormorant Garamond',serif; font-style:italic;
+      font-size:.8rem; color:var(--blush); white-space:nowrap;
+      overflow:hidden; text-overflow:ellipsis; max-width:100%; letter-spacing:.03em;
     }
 
-    .spark {
-      position: absolute;
-      bottom: -40px;
-      opacity: 0;
-      animation: riseUp linear infinite;
-      user-select: none;
-      will-change: opacity, transform;
+    .photo-card::after{
+      content:''; position:absolute; inset:0; border-radius:16px;
+      background:radial-gradient(circle at 0% 0%,rgba(194,75,110,.15) 0%,transparent 50%);
+      opacity:0; transition:opacity .4s; pointer-events:none; will-change:opacity;
     }
-
-    @keyframes riseUp {
-      0%   { opacity: 0; transform: translateY(0) rotate(0deg) translateX(0); }
-      12%  { opacity: 0.6; }
-      88%  { opacity: 0.35; }
-      100% { opacity: 0; transform: translateY(-110vh) rotate(540deg) translateX(50px); }
-    }
-
-    /* ── HEADER ── */
-    header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.1rem 2.5rem;
-      background: rgba(13,6,8,0.88);
-      /* backdrop-filter only on header — small area, acceptable cost */
-      backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 1px 0 rgba(201,147,90,0.08), 0 4px 30px rgba(0,0,0,0.5);
-      /* header on its own layer */
-      will-change: transform;
-      transform: translateZ(0);
-    }
-
-    .logo { display: flex; flex-direction: column; line-height: 1; }
-
-    .logo-main {
-      font-family: 'Great Vibes', cursive;
-      font-size: 2.1rem;
-      background: linear-gradient(135deg, var(--rose-light), var(--gold-light), var(--blush));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 0.04em;
-      filter: drop-shadow(0 0 12px rgba(232,120,154,0.4));
-    }
-
-    .logo-sub {
-      font-size: 0.5rem;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 0.2rem;
-      padding-left: 2px;
-    }
-
-    .header-right { display: flex; align-items: center; gap: 1.6rem; }
-
-    .photo-count {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.6rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .heart-pulse {
-      color: var(--rose);
-      font-size: 0.85rem;
-      animation: heartPulse 1.8s ease infinite;
-      filter: drop-shadow(0 0 6px rgba(194,75,110,0.6));
-      will-change: transform;
-    }
-
-    @keyframes heartPulse {
-      0%,100% { transform: scale(1); }
-      35%      { transform: scale(1.35); }
-      65%      { transform: scale(0.92); }
-    }
-
-    .view-toggle { display: flex; gap: 0.35rem; }
-
-    .view-btn {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      cursor: pointer;
-      padding: 0.32rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.62rem;
-      font-family: 'Raleway', sans-serif;
-      letter-spacing: 0.1em;
-      transition: all 0.28s;
-    }
-
-    .view-btn.active, .view-btn:hover {
-      background: var(--crimson);
-      border-color: var(--rose);
-      color: var(--blush);
-      box-shadow: 0 0 14px rgba(139,26,46,0.5);
-    }
-
-    /* ── HERO ── */
-    .hero {
-      text-align: center;
-      padding: 9rem 2rem 3rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-eyebrow {
-      font-size: 0.55rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 0 8px rgba(201,147,90,0.4));
-    }
-
-    .hero-title {
-      font-family: 'Great Vibes', cursive;
-      font-size: clamp(3rem, 8.5vw, 6rem);
-      background: linear-gradient(160deg, var(--blush) 0%, var(--rose-light) 40%, var(--gold-light) 80%, var(--blush) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.15;
-      margin-bottom: 0.8rem;
-      filter: drop-shadow(0 0 30px rgba(232,120,154,0.3));
-      animation: titleGlow 4s ease infinite alternate;
-      will-change: filter;
-    }
-
-    @keyframes titleGlow {
-      from { filter: drop-shadow(0 0 20px rgba(232,120,154,0.25)); }
-      to   { filter: drop-shadow(0 0 40px rgba(232,120,154,0.5)); }
-    }
-
-    .hero-subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 1rem;
-      color: var(--text2);
-      letter-spacing: 0.05em;
-    }
-
-    .hero-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin: 1.6rem auto 0;
-      max-width: 320px;
-    }
-
-    .divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border2)); }
-    .divider-line.r { background: linear-gradient(90deg, var(--border2), transparent); }
-    .divider-icon { color: var(--gold); font-size: 0.85rem; filter: drop-shadow(0 0 6px rgba(201,147,90,0.5)); }
-
-    /* ── MAIN ── */
-    main {
-      padding: 1.5rem 2rem 5rem;
-      max-width: 1600px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* ── GALLERY ── */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
-      gap: 14px;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards;
-    }
-
-    .gallery.list-view {
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── PHOTO CARD ──
-       KEY PERF FIXES:
-       • contain: layout style paint  → browser skips layout/style recalc for siblings
-       • NO backdrop-filter on cards  → was biggest scroll killer
-       • NO box-shadow transition on scroll elements
-       • transform-based hover only   → compositor thread, zero main-thread cost
-    ── */
-    .photo-card {
-      position: relative;
-      aspect-ratio: 1;
-      overflow: hidden;
-      cursor: pointer;
-      background: var(--surface);
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.55);
-      animation: cardReveal 0.6s cubic-bezier(0.34,1.46,0.64,1) both;
-      /* CRITICAL: contain tells browser this card is self-contained */
-      contain: layout style paint;
-      /* GPU layer for smooth hover */
-      will-change: transform;
-      transform: translateZ(0);
-    }
-
-    @keyframes cardReveal {
-      from { opacity: 0; transform: scale(0.87) translateY(14px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .photo-card:hover {
-      /* transform only — zero repaint, handled by compositor */
-      transform: translateY(-6px) scale(1.018) translateZ(0);
-    }
-
-    .gallery.list-view .photo-card { aspect-ratio: 16/5; border-radius: 12px; }
-
-    .photo-card img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-      border-radius: 16px;
-      /* transition only transform + filter — both GPU-accelerated */
-      transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94),
-                  filter 0.4s ease;
-      filter: brightness(0.8) saturate(0.88) sepia(0.1);
-      will-change: transform, filter;
-    }
-
-    .photo-card:hover img {
-      transform: scale(1.07);
-      filter: brightness(0.96) saturate(1.1) sepia(0.03);
-    }
-
-    /* overlay uses opacity transition — compositor only ✓ */
-    .photo-overlay {
-      position: absolute; inset: 0;
-      border-radius: 16px;
-      background: linear-gradient(
-        to top,
-        rgba(8,2,5,0.88) 0%,
-        rgba(80,15,35,0.4) 40%,
-        transparent 72%
-      );
-      opacity: 0;
-      transition: opacity 0.35s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-end;
-      padding: 1rem 1.1rem;
-      gap: 0.18rem;
-      will-change: opacity;
-    }
-
-    .photo-card:hover .photo-overlay { opacity: 1; }
-
-    .photo-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 0.8rem;
-      color: var(--blush);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      letter-spacing: 0.03em;
-    }
-
-    /* rose glow — opacity only, no repaint */
-    .photo-card::after {
-      content: '';
-      position: absolute; inset: 0; border-radius: 16px;
-      background: radial-gradient(circle at 0% 0%, rgba(194,75,110,0.15) 0%, transparent 50%);
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
-      will-change: opacity;
-    }
-    .photo-card:hover::after { opacity: 1; }
+    .photo-card:hover::after{opacity:1}
 
     /* ── FAV BUTTON ── */
-    .fav-btn {
-      position: absolute;
-      top: 0.65rem; right: 0.65rem;
-      /* simple bg, no backdrop-filter — saves GPU memory bandwidth */
-      background: rgba(13,6,8,0.8);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 34px; height: 34px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      font-size: 0.9rem;
-      opacity: 0;
-      transform: scale(0.65) translateZ(0);
-      transition: opacity 0.3s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-      z-index: 5;
-      will-change: transform, opacity;
+    .fav-btn{
+      position:absolute; top:.6rem; right:.6rem; z-index:5;
+      background:rgba(13,6,8,.82); border:1px solid var(--border);
+      border-radius:50%; width:33px; height:33px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:.88rem;
+      opacity:0; transform:scale(.65) translateZ(0);
+      transition:opacity .3s,transform .3s cubic-bezier(.34,1.56,.64,1),border-color .3s,box-shadow .3s;
+      will-change:transform,opacity;
+    }
+    .photo-card:hover .fav-btn{opacity:1;transform:scale(1) translateZ(0)}
+    .fav-btn.loved{
+      opacity:1!important; transform:scale(1) translateZ(0)!important;
+      border-color:var(--rose); box-shadow:0 0 12px rgba(194,75,110,.5);
     }
 
-    .photo-card:hover .fav-btn { opacity: 1; transform: scale(1) translateZ(0); }
-    .fav-btn.loved {
-      opacity: 1 !important;
-      transform: scale(1) translateZ(0) !important;
-      border-color: var(--rose);
-      box-shadow: 0 0 12px rgba(194,75,110,0.5);
-    }
+    /* loved card glow border */
+    .photo-card.is-loved{border-color:rgba(194,75,110,.45)}
 
-    /* ── LOADING ── */
-    .loading-screen {
-      position: fixed; inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, #1a0812 0%, #0d0608 70%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 1000; gap: 1.8rem;
-      transition: opacity 0.8s ease, visibility 0.8s;
+    /* ═══════════════════════════════════════
+       LOADING
+    ═══════════════════════════════════════ */
+    .loading-screen{
+      position:fixed; inset:0;
+      background:radial-gradient(ellipse at 50% 40%,#1a0812 0%,#0d0608 70%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      z-index:1000; gap:1.8rem;
+      transition:opacity .8s ease,visibility .8s;
     }
-    .loading-screen.hidden { opacity: 0; visibility: hidden; }
+    .loading-screen.hidden{opacity:0;visibility:hidden}
+    .loading-heart{font-size:3.5rem;animation:loadHeart 1.2s ease infinite;filter:drop-shadow(0 0 20px rgba(194,75,110,.7));will-change:transform}
+    @keyframes loadHeart{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+    .loading-title{font-family:'Great Vibes',cursive;font-size:3.2rem;background:linear-gradient(135deg,var(--rose-light),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 16px rgba(194,75,110,.4))}
+    .loader-track{width:200px;height:1px;background:var(--border);border-radius:1px;overflow:hidden}
+    .loader-track::after{content:'';display:block;width:60%;height:100%;background:linear-gradient(90deg,transparent,var(--rose),var(--gold),transparent);animation:scanLine 1.4s ease infinite;will-change:transform}
+    @keyframes scanLine{0%{margin-left:-60%}100%{margin-left:100%}}
+    .loading-text{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
 
-    .loading-heart {
-      font-size: 3.5rem;
-      animation: loadHeart 1.2s ease infinite;
-      filter: drop-shadow(0 0 20px rgba(194,75,110,0.7));
-      will-change: transform;
-    }
-    @keyframes loadHeart { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
+    /* ═══════════════════════════════════════
+       MESSAGE BOX
+    ═══════════════════════════════════════ */
+    .message-box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40vh;gap:1rem;text-align:center;grid-column:1/-1}
+    .message-box h2{font-family:'Great Vibes',cursive;font-size:3rem;color:var(--muted)}
+    .message-box p{font-size:.75rem;color:var(--muted);letter-spacing:.1em}
 
-    .loading-title {
-      font-family: 'Great Vibes', cursive;
-      font-size: 3.2rem;
-      background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(0 0 16px rgba(194,75,110,0.4));
+    /* ═══════════════════════════════════════
+       LIGHTBOX
+    ═══════════════════════════════════════ */
+    .lightbox{
+      position:fixed; inset:0; z-index:500;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(4,1,3,.97); backdrop-filter:blur(18px);
+      opacity:0; visibility:hidden;
+      transition:opacity .4s ease,visibility .4s;
+      will-change:opacity;
     }
+    .lightbox.open{opacity:1;visibility:visible}
 
-    .loader-track {
-      width: 200px; height: 1px;
-      background: var(--border);
-      border-radius: 1px; overflow: hidden;
-    }
-    .loader-track::after {
-      content: ''; display: block;
-      width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, var(--rose), var(--gold), transparent);
-      animation: scanLine 1.4s ease infinite;
-      will-change: transform;
-    }
-    @keyframes scanLine { 0%{margin-left:-60%} 100%{margin-left:100%} }
+    .lb-glow{position:absolute;width:350px;height:350px;border-radius:50%;pointer-events:none}
+    .lb-glow.tl{top:-80px;left:-80px;background:radial-gradient(circle,rgba(139,26,46,.2) 0%,transparent 70%)}
+    .lb-glow.br{bottom:-80px;right:-80px;background:radial-gradient(circle,rgba(201,147,90,.12) 0%,transparent 70%)}
 
-    .loading-text {
-      font-size: 0.58rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    .lb-inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:1.2rem;max-width:92vw}
 
-    /* ── MESSAGE BOX ── */
-    .message-box {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      min-height: 40vh; gap: 1rem;
-      text-align: center; grid-column: 1/-1;
+    #lightboxImg{
+      max-width:88vw; max-height:74vh; object-fit:contain; display:block;
+      border-radius:18px;
+      box-shadow:0 0 0 1px rgba(194,75,110,.2),0 0 0 3px rgba(139,26,46,.1),0 35px 90px rgba(0,0,0,.85),0 0 80px rgba(139,26,46,.2);
+      transform:scale(.93) translateZ(0); transition:transform .45s cubic-bezier(.34,1.46,.64,1);
+      will-change:transform;
     }
-    .message-box h2 { font-family:'Great Vibes',cursive; font-size:3rem; color:var(--muted); }
-    .message-box p { font-size:.75rem; color:var(--muted); letter-spacing:.1em; }
+    .lightbox.open #lightboxImg{transform:scale(1) translateZ(0)}
 
-    /* ── LIGHTBOX ── */
-    .lightbox {
-      position: fixed; inset: 0; z-index: 500;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(4,1,3,0.96);
-      /* backdrop-filter only when lightbox open — tiny area, no scroll cost */
-      backdrop-filter: blur(18px);
-      opacity: 0; visibility: hidden;
-      transition: opacity 0.4s ease, visibility 0.4s;
-      will-change: opacity;
+    /* lb fav heart (inside lightbox) */
+    .lb-fav-btn{
+      position:absolute; top:.7rem; right:.7rem; z-index:10;
+      background:rgba(13,6,8,.8); border:1px solid var(--border);
+      border-radius:50%; width:38px; height:38px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:1.05rem;
+      transition:all .3s cubic-bezier(.34,1.56,.64,1);
     }
-    .lightbox.open { opacity: 1; visibility: visible; }
+    .lb-fav-btn.loved{border-color:var(--rose);box-shadow:0 0 16px rgba(194,75,110,.55)}
 
-    .lb-glow {
-      position: absolute; width: 350px; height: 350px;
-      border-radius: 50%; pointer-events: none;
+    .lb-btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:rgba(26,14,18,.7); border:1px solid var(--border2);
+      color:var(--text2); cursor:pointer;
+      width:50px; height:50px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.4rem; transition:all .3s; z-index:10;
     }
-    .lb-glow.tl { top:-80px; left:-80px; background:radial-gradient(circle,rgba(139,26,46,0.2) 0%,transparent 70%); }
-    .lb-glow.br { bottom:-80px; right:-80px; background:radial-gradient(circle,rgba(201,147,90,0.12) 0%,transparent 70%); }
+    .lb-btn:hover{background:rgba(139,26,46,.5);border-color:var(--rose);color:var(--blush);box-shadow:0 0 22px rgba(139,26,46,.5)}
+    .lb-prev{left:-68px} .lb-next{right:-68px}
 
-    .lb-inner {
-      position: relative;
-      display: flex; flex-direction: column;
-      align-items: center; gap: 1.3rem;
-      max-width: 92vw;
+    .lb-close{
+      position:absolute; top:-3rem; right:0;
+      background:rgba(26,14,18,.7); border:1px solid var(--border);
+      color:var(--muted); cursor:pointer; width:36px; height:36px; border-radius:50%;
+      font-size:1rem; display:flex; align-items:center; justify-content:center; transition:all .25s;
     }
+    .lb-close:hover{border-color:var(--rose);color:var(--blush);box-shadow:0 0 12px rgba(194,75,110,.4)}
 
-    #lightboxImg {
-      max-width: 88vw; max-height: 74vh;
-      object-fit: contain; display: block;
-      border-radius: 18px;
-      box-shadow:
-        0 0 0 1px rgba(194,75,110,0.2),
-        0 0 0 3px rgba(139,26,46,0.1),
-        0 35px 90px rgba(0,0,0,0.85),
-        0 0 80px rgba(139,26,46,0.2);
-      transform: scale(0.93) translateZ(0);
-      transition: transform 0.45s cubic-bezier(0.34,1.46,0.64,1);
-      will-change: transform;
-    }
-    .lightbox.open #lightboxImg { transform: scale(1) translateZ(0); }
+    .lb-meta{display:flex;align-items:center;justify-content:center;gap:1.8rem;flex-wrap:wrap}
+    .lb-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:var(--text2);letter-spacing:.04em}
+    .lb-counter{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rose);filter:drop-shadow(0 0 5px rgba(194,75,110,.4))}
+    .lb-drive{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,147,90,.35);padding-bottom:1px;transition:all .2s;filter:drop-shadow(0 0 5px rgba(201,147,90,.25))}
+    .lb-drive:hover{color:var(--gold-light);border-color:var(--gold-light)}
 
-    .lb-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(26,14,18,0.7);
-      border: 1px solid var(--border2);
-      color: var(--text2); cursor: pointer;
-      width: 50px; height: 50px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; transition: all 0.3s; z-index: 10;
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    footer{
+      border-top:1px solid var(--border); padding:1.4rem 2.5rem;
+      display:flex; align-items:center; justify-content:space-between;
+      position:relative; z-index:2; background:rgba(13,6,8,.6);
     }
-    .lb-btn:hover {
-      background: rgba(139,26,46,0.5);
-      border-color: var(--rose); color: var(--blush);
-      box-shadow: 0 0 22px rgba(139,26,46,0.5);
-    }
-    .lb-prev { left: -68px; }
-    .lb-next { right: -68px; }
-
-    .lb-close {
-      position: absolute; top: -3rem; right: 0;
-      background: rgba(26,14,18,0.7);
-      border: 1px solid var(--border); color: var(--muted);
-      cursor: pointer; width: 36px; height: 36px; border-radius: 50%;
-      font-size: 1rem; display: flex; align-items: center; justify-content: center;
-      transition: all 0.25s;
-    }
-    .lb-close:hover { border-color: var(--rose); color: var(--blush); box-shadow: 0 0 12px rgba(194,75,110,0.4); }
-
-    .lb-meta {
-      display: flex; align-items: center;
-      justify-content: center; gap: 1.8rem; flex-wrap: wrap;
-    }
-    .lb-name {
-      font-family: 'Cormorant Garamond', serif; font-style: italic;
-      font-size: 0.9rem; color: var(--text2); letter-spacing: 0.04em;
-    }
-    .lb-counter {
-      font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--rose); filter: drop-shadow(0 0 5px rgba(194,75,110,0.4));
-    }
-    .lb-drive {
-      font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--gold); text-decoration: none;
-      border-bottom: 1px solid rgba(201,147,90,0.35); padding-bottom: 1px;
-      transition: all 0.2s; filter: drop-shadow(0 0 5px rgba(201,147,90,0.25));
-    }
-    .lb-drive:hover { color: var(--gold-light); border-color: var(--gold-light); }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.4rem 2.5rem;
-      display: flex; align-items: center; justify-content: space-between;
-      position: relative; z-index: 2;
-      background: rgba(13,6,8,0.6);
-    }
-    .footer-brand {
-      font-family: 'Great Vibes', cursive; font-size: 1.5rem;
-      background: linear-gradient(90deg, var(--rose-light), var(--gold-light));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      filter: drop-shadow(0 0 8px rgba(194,75,110,0.3));
-    }
-    footer span { font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+    .footer-brand{font-family:'Great Vibes',cursive;font-size:1.5rem;background:linear-gradient(90deg,var(--rose-light),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 8px rgba(194,75,110,.3))}
+    footer span{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
 
     /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--crimson); border-radius: 2px; }
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:var(--crimson);border-radius:2px}
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
-      header { padding: 0.9rem 1rem; }
-      .logo-main { font-size: 1.7rem; }
-      .hero { padding: 7.5rem 1rem 2rem; }
-      main { padding: 1rem 0.8rem 4rem; }
-      .gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .header-right { gap: 0.7rem; }
-      .lb-prev { left: -8px; }
-      .lb-next { right: -8px; }
-      .lb-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+    @media(max-width:640px){
+      header{padding:.8rem 1rem}
+      .logo-main{font-size:1.7rem}
+      .search-input{width:110px}
+      .search-input:focus{width:140px}
+      .hero{padding:7.5rem 1rem 2rem}
+      main{padding:1rem .8rem 4rem}
+      .gallery{grid-template-columns:repeat(2,1fr);gap:8px}
+      .header-right{gap:.5rem}
+      .nav-tabs{padding:0 1rem}
+      .lb-prev{left:-6px}.lb-next{right:-6px}
+      .lb-btn{width:38px;height:38px;font-size:1.1rem}
     }
   </style>
 </head>
@@ -596,7 +413,7 @@
 <div class="stars" id="stars"></div>
 <div class="sparks" id="sparks"></div>
 
-<!-- Loading -->
+<!-- ── Loading ── -->
 <div class="loading-screen" id="loadingScreen">
   <div class="loading-heart">🖤</div>
   <div class="loading-title">Our Memories</div>
@@ -604,25 +421,29 @@
   <div class="loading-text" id="loadingText">Gathering your moments…</div>
 </div>
 
-<!-- Header -->
+<!-- ── Header ── -->
 <header>
   <div class="logo">
     <span class="logo-main">Our Memories</span>
     <span class="logo-sub">A Love Story in Photos</span>
   </div>
   <div class="header-right">
+    <div class="search-wrap">
+      <input class="search-input" id="searchInput" type="text" placeholder="Search memories…" oninput="onSearch()" autocomplete="off"/>
+      <span class="search-icon">♡</span>
+    </div>
     <div class="photo-count">
       <span class="heart-pulse">♥</span>
       <span id="photoCount">— memories</span>
     </div>
     <div class="view-toggle">
       <button class="view-btn active" id="gridBtn" onclick="setView('grid')">♡ Grid</button>
-      <button class="view-btn" id="listBtn" onclick="setView('list')">≡ List</button>
+      <button class="view-btn" id="listBtn"  onclick="setView('list')">≡ List</button>
     </div>
   </div>
 </header>
 
-<!-- Hero -->
+<!-- ── Hero ── -->
 <div class="hero">
   <p class="hero-eyebrow">✦ cherished forever ✦</p>
   <h1 class="hero-title">Every Picture Tells Our Story</h1>
@@ -634,12 +455,52 @@
   </div>
 </div>
 
-<!-- Gallery -->
+<!-- ── Nav Tabs ── -->
+<div class="nav-tabs">
+  <button class="nav-tab active" id="tabAll"  onclick="switchTab('all')">
+    🖼 All Memories
+    <span class="tab-badge" id="badgeAll">—</span>
+  </button>
+  <button class="nav-tab" id="tabFav" onclick="switchTab('favorites')">
+    ❤️ Favorites
+    <span class="tab-badge" id="badgeFav">0</span>
+  </button>
+</div>
+
+<!-- ── Main ── -->
 <main>
-  <div class="gallery" id="gallery"></div>
+
+  <!-- ALL MEMORIES section -->
+  <div class="section active" id="sectionAll">
+    <div class="section-head">
+      <span class="section-head-title">All Memories</span>
+      <div class="section-head-line"></div>
+      <span class="section-head-count" id="allCount">—</span>
+    </div>
+    <div class="gallery" id="galleryAll"></div>
+  </div>
+
+  <!-- FAVORITES section -->
+  <div class="section" id="sectionFav">
+    <div class="fav-banner">
+      <span class="fav-banner-icon">💝</span>
+      <div class="fav-banner-text">
+        <h3>Your Most Cherished Moments</h3>
+        <p>These are the photos you've loved — a collection close to your heart</p>
+      </div>
+      <button class="fav-clear-btn" onclick="clearAllFavs()">Clear All</button>
+    </div>
+    <div class="section-head">
+      <span class="section-head-title">Favorite Memories</span>
+      <div class="section-head-line"></div>
+      <span class="section-head-count" id="favCount">0 photos</span>
+    </div>
+    <div id="favContent"></div>
+  </div>
+
 </main>
 
-<!-- Lightbox -->
+<!-- ── Lightbox ── -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOnBg(event)">
   <div class="lb-glow tl"></div>
   <div class="lb-glow br"></div>
@@ -648,17 +509,18 @@
     <div style="position:relative">
       <button class="lb-btn lb-prev" onclick="navigate(-1)">‹</button>
       <img id="lightboxImg" src="" alt=""/>
+      <button class="lb-fav-btn" id="lbFavBtn" onclick="lbToggleFav()" title="Love this">🤍</button>
       <button class="lb-btn lb-next" onclick="navigate(1)">›</button>
     </div>
     <div class="lb-meta">
-      <span class="lb-name" id="lbName"></span>
+      <span class="lb-name"    id="lbName"></span>
       <span class="lb-counter" id="lbCounter"></span>
       <a class="lb-drive" id="lbLink" href="#" target="_blank">Open in Drive ↗</a>
     </div>
   </div>
 </div>
 
-<!-- Footer -->
+<!-- ── Footer ── -->
 <footer>
   <div class="footer-brand">Our Memories ♡</div>
   <span id="footerCount"></span>
@@ -668,39 +530,43 @@
   const API_KEY   = 'AIzaSyDutn48HU6P7Ichd9ckaTnJV2anbjuoudY';
   const FOLDER_ID = '1K4gnMOKUdTZ4_s-6zZmlgij7ocqJWRP3';
 
-  let photos = [], currentIndex = 0;
-  let favorites = new Set();
-  try { favorites = new Set(JSON.parse(localStorage.getItem('drk_favs')||'[]')); } catch(e){}
+  let photos       = [];
+  let currentIndex = 0;
+  let activeTab    = 'all';
+  let searchQuery  = '';
+  let lbPhotoList  = []; // which list is open in lightbox
 
-  // ── Stars (fewer = less paint) ─────────────────────
+  // ── Favorites persisted in localStorage ──────────────
+  let favorites = new Set();
+  try { favorites = new Set(JSON.parse(localStorage.getItem('drk_favs') || '[]')); } catch(e){}
+
+  function saveFavs() {
+    try { localStorage.setItem('drk_favs', JSON.stringify([...favorites])); } catch(e){}
+  }
+
+  // ── Stars ─────────────────────────────────────────────
   const starsEl = document.getElementById('stars');
   for (let i = 0; i < 60; i++) {
     const s = document.createElement('div');
     s.className = 'star';
     const sz = 1 + Math.random() * 1.8;
-    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;`+
-      `width:${sz}px;height:${sz}px;`+
-      `animation-duration:${3+Math.random()*5}s;`+
-      `animation-delay:${-Math.random()*7}s;`;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-duration:${3+Math.random()*5}s;animation-delay:${-Math.random()*7}s;`;
     starsEl.appendChild(s);
   }
 
-  // ── Rising sparks ──────────────────────────────────
+  // ── Sparks ────────────────────────────────────────────
   const SPARKS = ['🌹','🥀','🌸','✦','❥','♡','❧'];
   const sparkEl = document.getElementById('sparks');
   for (let i = 0; i < 14; i++) {
     const el = document.createElement('div');
     el.className = 'spark';
     el.textContent = SPARKS[i % SPARKS.length];
-    el.style.cssText = `left:${Math.random()*100}%;`+
-      `font-size:${0.55+Math.random()*0.7}rem;`+
-      `animation-duration:${10+Math.random()*12}s;`+
-      `animation-delay:${-Math.random()*18}s;`;
+    el.style.cssText = `left:${Math.random()*100}%;font-size:${.55+Math.random()*.7}rem;animation-duration:${10+Math.random()*12}s;animation-delay:${-Math.random()*18}s;`;
     sparkEl.appendChild(el);
   }
 
-  // ── Fetch ──────────────────────────────────────────
-  async function fetchPhotos(pageToken='', acc=[]) {
+  // ── Fetch ─────────────────────────────────────────────
+  async function fetchPhotos(pageToken = '', acc = []) {
     if (acc.length) {
       const el = document.getElementById('loadingText');
       if (el) el.textContent = `Gathering ${acc.length} memories…`;
@@ -712,112 +578,226 @@
     const res = await fetch(url);
     if (!res.ok) throw new Error(`API error ${res.status}`);
     const data = await res.json();
-    const all = acc.concat(data.files||[]);
+    const all = acc.concat(data.files || []);
     if (data.nextPageToken) return fetchPhotos(data.nextPageToken, all);
     return all;
   }
 
-  const thumb = f => f.thumbnailLink
-    ? f.thumbnailLink.replace(/=s\d+$/,'=s400')
+  const thumbUrl = f => f.thumbnailLink
+    ? f.thumbnailLink.replace(/=s\d+$/, '=s400')
     : `https://drive.google.com/thumbnail?id=${f.id}&sz=w400`;
+  const fullUrl  = f => `https://drive.google.com/thumbnail?id=${f.id}&sz=w1600`;
 
-  const full = f => `https://drive.google.com/thumbnail?id=${f.id}&sz=w1600`;
-
-  // ── Render ─────────────────────────────────────────
-  // Use DocumentFragment — single DOM insertion = zero layout thrashing
-  function renderGallery() {
-    const gallery = document.getElementById('gallery');
-    gallery.innerHTML = '';
-    if (!photos.length) {
-      gallery.innerHTML = `<div class="message-box"><h2>No memories yet</h2>
-        <p>The folder seems empty — add your beautiful moments ♡</p></div>`;
+  // ── Render a gallery into a container ─────────────────
+  function buildCards(list, container, indexOffset = 0) {
+    container.innerHTML = '';
+    if (!list.length) {
+      container.innerHTML = `<div class="message-box">
+        <h2>No memories found</h2>
+        <p>Try a different search or add more photos ♡</p>
+      </div>`;
       return;
     }
     const frag = document.createDocumentFragment();
-    photos.forEach((photo, i) => {
-      const isFav = favorites.has(photo.id);
-      const card = document.createElement('div');
-      card.className = 'photo-card';
+    list.forEach((photo, i) => {
+      const realIdx = indexOffset + i;
+      const isFav   = favorites.has(photo.id);
+      const card    = document.createElement('div');
+      card.className = 'photo-card' + (isFav ? ' is-loved' : '');
+      card.dataset.id  = photo.id;
       card.style.animationDelay = `${Math.min(i * 0.02, 0.5)}s`;
       card.innerHTML = `
-        <img src="${thumb(photo)}" alt="${photo.name}" loading="lazy" decoding="async"/>
+        <img src="${thumbUrl(photo)}" alt="${photo.name}" loading="lazy" decoding="async"/>
         <div class="photo-overlay">
-          <span class="photo-name">${photo.name.replace(/\.[^/.]+$/,'')}</span>
+          <span class="photo-name">${photo.name.replace(/\.[^/.]+$/, '')}</span>
         </div>
-        <button class="fav-btn${isFav?' loved':''}" title="Love this">${isFav?'❤️':'🤍'}</button>`;
+        <button class="fav-btn${isFav ? ' loved' : ''}" title="Love this">${isFav ? '❤️' : '🤍'}</button>
+      `;
       card.querySelector('.fav-btn').addEventListener('click', e => {
         e.stopPropagation();
-        toggleFav(photo.id, card.querySelector('.fav-btn'));
+        toggleFav(photo.id);
       });
-      card.addEventListener('click', () => openLightbox(i));
+      card.addEventListener('click', () => openLightbox(list, i));
       frag.appendChild(card);
     });
-    gallery.appendChild(frag);
+    container.appendChild(frag);
   }
 
-  function toggleFav(id, btn) {
-    if (favorites.has(id)) {
-      favorites.delete(id); btn.classList.remove('loved'); btn.textContent = '🤍';
-    } else {
-      favorites.add(id); btn.classList.add('loved'); btn.textContent = '❤️';
-      btn.animate([{transform:'scale(1) translateZ(0)'},{transform:'scale(1.7) translateZ(0)'},{transform:'scale(1) translateZ(0)'}],
-        {duration:400, easing:'cubic-bezier(.34,1.56,.64,1)'});
+  // ── Render All section ────────────────────────────────
+  function renderAll() {
+    const q    = searchQuery.toLowerCase();
+    const list = q ? photos.filter(p => p.name.toLowerCase().includes(q)) : photos;
+    const el   = document.getElementById('galleryAll');
+    buildCards(list, el);
+    document.getElementById('allCount').textContent = `${list.length} photo${list.length !== 1 ? 's' : ''}`;
+  }
+
+  // ── Render Favorites section ──────────────────────────
+  function renderFavs() {
+    const favPhotos = photos.filter(p => favorites.has(p.id));
+    const content   = document.getElementById('favContent');
+    const countEl   = document.getElementById('favCount');
+    countEl.textContent = `${favPhotos.length} photo${favPhotos.length !== 1 ? 's' : ''}`;
+
+    if (!favPhotos.length) {
+      content.innerHTML = `
+        <div class="fav-empty">
+          <div class="empty-icon">🤍</div>
+          <h3>No favorites yet</h3>
+          <p>Tap the heart on any photo to add it to your favorites collection</p>
+          <span class="hint">♡ &nbsp; tap a heart to begin &nbsp; ♡</span>
+        </div>`;
+      return;
     }
-    try { localStorage.setItem('drk_favs', JSON.stringify([...favorites])); } catch(e){}
+    const grid = document.createElement('div');
+    grid.className = 'gallery';
+    content.innerHTML = '';
+    content.appendChild(grid);
+    buildCards(favPhotos, grid);
   }
 
+  // ── Toggle fav ────────────────────────────────────────
+  function toggleFav(id) {
+    if (favorites.has(id)) {
+      favorites.delete(id);
+    } else {
+      favorites.add(id);
+    }
+    saveFavs();
+    updateBadges();
+    refreshAllCards(); // update all visible cards
+    if (activeTab === 'favorites') renderFavs();
+    updateLbFavBtn();
+  }
+
+  // update every card on screen that matches id
+  function refreshAllCards() {
+    document.querySelectorAll('.photo-card').forEach(card => {
+      const id    = card.dataset.id;
+      const isFav = favorites.has(id);
+      const btn   = card.querySelector('.fav-btn');
+      if (!btn) return;
+      btn.textContent = isFav ? '❤️' : '🤍';
+      btn.classList.toggle('loved', isFav);
+      card.classList.toggle('is-loved', isFav);
+      if (isFav) {
+        btn.animate([
+          {transform:'scale(1) translateZ(0)'},
+          {transform:'scale(1.7) translateZ(0)'},
+          {transform:'scale(1) translateZ(0)'}
+        ], {duration:400, easing:'cubic-bezier(.34,1.56,.64,1)'});
+      }
+    });
+  }
+
+  function updateBadges() {
+    document.getElementById('badgeAll').textContent = photos.length;
+    document.getElementById('badgeFav').textContent = favorites.size;
+  }
+
+  // ── Clear all favorites ───────────────────────────────
+  function clearAllFavs() {
+    if (!favorites.size) return;
+    favorites.clear();
+    saveFavs();
+    updateBadges();
+    refreshAllCards();
+    renderFavs();
+    updateLbFavBtn();
+  }
+
+  // ── Tab switch ────────────────────────────────────────
+  function switchTab(tab) {
+    activeTab = tab;
+    document.getElementById('sectionAll').classList.toggle('active', tab === 'all');
+    document.getElementById('sectionFav').classList.toggle('active', tab === 'favorites');
+    document.getElementById('tabAll').classList.toggle('active', tab === 'all');
+    document.getElementById('tabFav').classList.toggle('active', tab === 'favorites');
+    if (tab === 'favorites') renderFavs();
+  }
+
+  // ── Search ────────────────────────────────────────────
+  function onSearch() {
+    searchQuery = document.getElementById('searchInput').value;
+    if (activeTab !== 'all') switchTab('all');
+    renderAll();
+  }
+
+  // ── View toggle ───────────────────────────────────────
   function setView(v) {
-    const g = document.getElementById('gallery');
-    document.getElementById('gridBtn').classList.toggle('active', v==='grid');
-    document.getElementById('listBtn').classList.toggle('active', v==='list');
-    g.classList.toggle('list-view', v==='list');
+    document.getElementById('gridBtn').classList.toggle('active', v === 'grid');
+    document.getElementById('listBtn').classList.toggle('active', v === 'list');
+    document.querySelectorAll('.gallery').forEach(g => g.classList.toggle('list-view', v === 'list'));
   }
 
-  // ── Lightbox ───────────────────────────────────────
-  function openLightbox(i) {
-    currentIndex = i; updateLightbox();
+  // ── Lightbox ──────────────────────────────────────────
+  function openLightbox(list, i) {
+    lbPhotoList  = list;
+    currentIndex = i;
+    updateLightbox();
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
+
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
     document.body.style.overflow = '';
   }
+
   function closeLightboxOnBg(e) {
     if (e.target === document.getElementById('lightbox')) closeLightbox();
   }
+
   function navigate(dir) {
-    currentIndex = (currentIndex + dir + photos.length) % photos.length;
+    currentIndex = (currentIndex + dir + lbPhotoList.length) % lbPhotoList.length;
     updateLightbox();
   }
+
   function updateLightbox() {
-    const p = photos[currentIndex];
+    const p   = lbPhotoList[currentIndex];
     const img = document.getElementById('lightboxImg');
-    img.src = ''; setTimeout(() => { img.src = full(p); }, 40);
-    document.getElementById('lbName').textContent    = p.name.replace(/\.[^/.]+$/,'');
-    document.getElementById('lbCounter').textContent = `♥ ${currentIndex+1} of ${photos.length}`;
-    document.getElementById('lbLink').href = p.webViewLink || `https://drive.google.com/file/d/${p.id}/view`;
+    img.src = '';
+    setTimeout(() => { img.src = fullUrl(p); }, 40);
+    document.getElementById('lbName').textContent    = p.name.replace(/\.[^/.]+$/, '');
+    document.getElementById('lbCounter').textContent = `♥ ${currentIndex + 1} of ${lbPhotoList.length}`;
+    document.getElementById('lbLink').href           = p.webViewLink || `https://drive.google.com/file/d/${p.id}/view`;
+    updateLbFavBtn();
+  }
+
+  function updateLbFavBtn() {
+    const p   = lbPhotoList[currentIndex];
+    if (!p) return;
+    const btn = document.getElementById('lbFavBtn');
+    const fav = favorites.has(p.id);
+    btn.textContent = fav ? '❤️' : '🤍';
+    btn.classList.toggle('loved', fav);
+  }
+
+  function lbToggleFav() {
+    const p = lbPhotoList[currentIndex];
+    if (p) toggleFav(p.id);
   }
 
   document.addEventListener('keydown', e => {
     const lb = document.getElementById('lightbox');
     if (!lb.classList.contains('open')) return;
-    if (e.key==='Escape')     closeLightbox();
-    if (e.key==='ArrowRight') navigate(1);
-    if (e.key==='ArrowLeft')  navigate(-1);
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowRight')  navigate(1);
+    if (e.key === 'ArrowLeft')   navigate(-1);
   });
 
-  // ── Init ──────────────────────────────────────────
+  // ── Init ──────────────────────────────────────────────
   async function init() {
     try {
       photos = await fetchPhotos();
       const n = photos.length;
-      document.getElementById('photoCount').textContent = `${n} memor${n!==1?'ies':'y'}`;
-      document.getElementById('footerCount').textContent = `${n} cherished moment${n!==1?'s':''}`;
-      renderGallery();
+      document.getElementById('photoCount').textContent  = `${n} memor${n !== 1 ? 'ies' : 'y'}`;
+      document.getElementById('footerCount').textContent = `${n} cherished moment${n !== 1 ? 's' : ''}`;
+      updateBadges();
+      renderAll();
     } catch(err) {
       console.error(err);
-      document.getElementById('gallery').innerHTML =
+      document.getElementById('galleryAll').innerHTML =
         `<div class="message-box"><h2>Something went wrong</h2><p>${err.message}</p></div>`;
     } finally {
       document.getElementById('loadingScreen').classList.add('hidden');
